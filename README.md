@@ -4,5 +4,5 @@ A MATLAB implementation of the MGRIT method
 ## Requirement
 - MATLAB ( >2016a for Live Script )
 
-## Examples
+## Example
 - Checkout `MGRIT_driver.mlx` ( Live Script ) or `MGRIT_driver.m`
