@@ -1,4 +1,4 @@
-function x = MGRIT(A, b, x, fc_ratio)
+function x = MGRIT_0d(A, b, x, fc_ratio)
 
 n = length(b);
 nc = ceil(n/fc_ratio);
@@ -26,7 +26,7 @@ x = FCF_relaxation(R, A, P, x, b);
 b2 = R1*(b - A*x);
 
 %% Coarse grid operation
-x2 = MGRIT(R*A*P, b2, R*x, fc_ratio);
+x2 = MGRIT_0d(R*A*P, b2, R*x, fc_ratio);
 
 %% Correction
 x = x + P*x2;
