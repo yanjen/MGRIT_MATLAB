@@ -6,13 +6,9 @@ fc_ratio = 4;
 %% MGRIT Parallel-in-Space/Time method
 [A, x, b] = gen_1d_heat_transfer(T, Q, h, dt, N);
 
-[A, x, b] = reorganize_fine_coarse_1d(A, x, b, N, fc_ratio);
-
 for i = 1:iter
     x = MGRIT_1d(A, x, b, N, fc_ratio);
 end
-
-x = reverse_permute_fine_coarse_1d(x, N, fc_ratio);
 
 l = length(x)/N + 1;
 T = zeros(1,l*N);

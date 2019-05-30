@@ -5,13 +5,16 @@ n = l * N;
 nc = l * ceil(N/fc_ratio);
 nf = n - nc;
 
-if length(A) < 5*l
+if nf == 0
     x = A\b;
 else
 
-A_ff = A(1:nf, 1:nf);
-A_fc = A(1:nf, nf+1:n);
-A_cf = A(nf+1:n, 1:nf);
+%% Reorganize the matrix and 
+[B, x, y] = reorganize_fine_coarse_1d(A, x, b, N, fc_ratio);
+
+A_ff = B(1:nf, 1:nf);
+A_fc = B(1:nf, nf+1:n);
+A_cf = B(nf+1:n, 1:nf);
 
 % Restriction Matrix
 R = [-A_cf*(A_ff\speye(nf)) speye(nc)];
@@ -20,17 +23,22 @@ P = [-A_ff\A_fc;speye(nc)];
 
 R1 = [zeros(nc, nf) speye(nc)];
 
+P1 = [zeros(nf, nc);speye(nc)];
+
 %% Do FCF relaxization
-x = FCF_relaxation(R, A, P, x, b);
+x = FCF_relaxation(R, B, P, x, y);
 
 %% Restriction
-b2 = R1*(b - A*x);
+b2 = R1*(y - B*x);
 
 %% Coarse grid operation
-x2 = MGRIT_0d(R*A*P, b2, R*x, fc_ratio);
+x2 = MGRIT_1d(R1*B*P1, b2, R1*x, nc/l, fc_ratio);
 
 %% Correction
 x = x + P*x2;
+
+%% Reverse the permutation
+x = reverse_permute_fine_coarse_1d(x, N, fc_ratio);
 
 end
 
