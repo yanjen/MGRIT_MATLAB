@@ -5,9 +5,9 @@ if level == 0
 end
 
 l = length(T) / N;
-R = zeros(1, length(T));
+R = T;
 for i = 1:N-1
-    R(i*l + 1:(i+1)*l) = explicit_time_marching(T((i-1)*l + 1:i*l), Q, h, dt);
+    R(i*l + 1:(i+1)*l) = Lax_Wendroff(T((i-1)*l + 1:i*l), h, dt);
 end
 
 N2 = ceil(N / fc_ratio);
@@ -25,9 +25,9 @@ for i = 1:N2
     end
 end
 
-S = zeros(1, length(T));
+S = R;
 for i = 1:N-1
-    S(i*l + 1:(i+1)*l) = explicit_time_marching(R((i-1)*l + 1:i*l), Q, h, dt);
+    S(i*l + 1:(i+1)*l) = Lax_Wendroff(R((i-1)*l + 1:i*l), h, dt);
 end
 
 T = S;
