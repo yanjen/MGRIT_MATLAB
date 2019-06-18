@@ -14,8 +14,8 @@ for i = 1:length(x)
 end
 Y = repmat(Y,1,N);
 fc_ratio = 2;
-level = 2;
-iter = 20;
+level = 3;
+iter = 10;
 
 figure
 subplot(2,1,1)
@@ -51,14 +51,21 @@ p_ETM = plot(x, Y_ETM); M1 = 'Explicit time marching';
 legend(p_ETM, M1);
 pause(0.5)
 
-% %% Plot with 2x coarse x-grid
-% h = 0.2;
-% x = 0:h:1;
-% T_2 = zeros(size(x));
-% for i = 1:N-1
-%     T_2 = explicit_time_marching(T_2, Q, h, dt);
-% end
-% p_2 = plot(x, T_2); M2 = 'Explicit with 2x coarser x-grids';
-% legend([p_ETM; p_2], M1, M2);
+%% Plot with coarse grids
+ratio = fc_ratio^(level - 1);
+h = h * ratio;
+dt = dt * ratio;
+x = 0:h:300;
+Y_2 = zeros(size(x));
+for i = 1:length(x)
+    if x(i) > 49 && x(i) < 111
+        Y_2(i) = 100*sin(pi*(x(i)-50)/60);
+    end
+end
+for i = 1:N/ratio
+    Y_2 = Lax_Wendroff(Y_2, h, dt);
+end
+p_2 = plot(x, Y_2, '-x'); M2 = 'Explicit with coarsest grids';
+legend([p_ETM; p_2], M1, M2);
 
 end
