@@ -1,11 +1,11 @@
 function MGRIT_explicit_driver()
 
 Q = 1;
-h = 2.5;
-dt = 0.0075;
+h = 1.25;
+dt = 1;
 x = 0:h:300;
 l = length(x);
-N = 40;
+N = 60;
 Y = zeros(1, l);
 for i = 1:length(x)
     if x(i) > 49 && x(i) < 111
@@ -14,8 +14,8 @@ for i = 1:length(x)
 end
 Y = repmat(Y,1,N);
 fc_ratio = 2;
-level = 3;
-iter = 10;
+level = 2;
+iter = 15;
 
 figure
 subplot(2,1,1)

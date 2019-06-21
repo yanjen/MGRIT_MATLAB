@@ -3,7 +3,7 @@ function S = Lax_Wendroff(T, h, dt)
 l = length(T);
 S = zeros(1,l);
 
-C = 300;
+C = 1;
 CR = C*dt/h;
 CX = 0.5*CR*CR;
 
