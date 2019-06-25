@@ -1,11 +1,11 @@
 function MGRIT_explicit_driver()
-
+option = 'CoarseDirect';
 Q = 1;
 h = 1.25;
 dt = 1;
 x = 0:h:300;
 l = length(x);
-N = 60;
+N = 120;
 Y = zeros(1, l);
 for i = 1:length(x)
     if x(i) > 49 && x(i) < 111
@@ -15,7 +15,7 @@ end
 Y = repmat(Y,1,N);
 fc_ratio = 2;
 level = 2;
-iter = 15;
+iter = 30;
 
 figure
 subplot(2,1,1)
@@ -26,9 +26,19 @@ title('Results for all time steps')
 hold on
 % axis tight manual
 
+%% Plot theoretical answer
+Z = zeros(1, l);
+for i = 1:length(x)
+    if x(i) > 49 + N && x(i) < 111 + N - 1
+        Z(i) = 100*sin(pi*(x(i)-(50 + N-1))/60);
+    end
+end
+subplot(2,1,1)
+plot(x, Z, 'LineWidth', 2);
+
 %% Plot MGRIT explicit result by iteration
 for i = 1:iter
-    Y = MGRIT_explicit_method1(Y, Q, h, dt, N, fc_ratio, level);
+    Y = MGRIT_explicit_method1(Y, Q, h, dt, N, fc_ratio, level, option);
     subplot(2,1,1)
     plot(x, Y(l*(N-1) + 1:l*N));
     subplot(2,1,2)
@@ -62,9 +72,10 @@ for i = 1:length(x)
         Y_2(i) = 100*sin(pi*(x(i)-50)/60);
     end
 end
-for i = 1:N/ratio
+for i = 1:N/ratio - 1
     Y_2 = Lax_Wendroff(Y_2, h, dt);
 end
+Y_2 = Lax_Wendroff(Y_2, h, dt/ratio);
 p_2 = plot(x, Y_2, '-x'); M2 = 'Explicit with coarsest grids';
 legend([p_ETM; p_2], M1, M2);
 
