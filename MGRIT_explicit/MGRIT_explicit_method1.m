@@ -27,18 +27,26 @@ end
 R2 = MGRIT_explicit_method1(T2, h*fc_ratio, dt*fc_ratio, N2, fc_ratio, level - 1, option);
 for i = 1:N2
     for j = 1:l2
+%% Update same amount
 %         for k = fc_ratio:-1:1
 %             if ((i-1)*fc_ratio)*l + fc_ratio*(j-1) + k < length(T)+1
 %                 R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + k) = R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + k) + R2((i-1)*l2 + (j-1) + 1) - R((i-1)*fc_ratio*l + fc_ratio*(j-1) + 1);
 %             end
 %         end
+%% Update only on coarse
         R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 1) = R2((i-1)*l2 + (j-1) + 1);
+    end
+%% Update by interpolation
+    for j = 1:l2 - 1
+        R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 2) = (R2((i-1)*l2 + (j-1) + 1) + R2((i-1)*l2 + j + 1))/2;
     end
 end
 
 S = R;
 for i = 1:N-1
-    S(i*l + 1:(i+1)*l) = Lax_Wendroff(R((i-1)*l + 1:i*l), h, dt);
+    if mod(i,2) == 1
+        S(i*l + 1:(i+1)*l) = Lax_Wendroff(R((i-1)*l + 1:i*l), h, dt);
+    end
 end
 
 T = S;
