@@ -1,4 +1,4 @@
-function T = MGRIT_explicit_method1(T, Q, h, dt, N, fc_ratio, level, option)
+function T = MGRIT_explicit_method1(T, h, dt, N, fc_ratio, level, option)
 l = length(T) / N;
 
 
@@ -24,15 +24,15 @@ for i = 1:N2
         T2((i-1)*l2 + (j-1) + 1) = R((i-1)*fc_ratio*l + fc_ratio*(j-1) + 1);
     end
 end
-R2 = MGRIT_explicit_method1(T2, Q, h*fc_ratio, dt*fc_ratio, N2, fc_ratio, level - 1, option);
+R2 = MGRIT_explicit_method1(T2, h*fc_ratio, dt*fc_ratio, N2, fc_ratio, level - 1, option);
 for i = 1:N2
     for j = 1:l2
-        for k = fc_ratio:-1:1
-            if ((i-1)*fc_ratio)*l + fc_ratio*(j-1) + k < length(T)+1
-                R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + k) = R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + k) + R2((i-1)*l2 + (j-1) + 1) - R((i-1)*fc_ratio*l + fc_ratio*(j-1) + 1);
-            end
-        end
-%         R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 1) = R2((i-1)*l2 + (j-1) + 1);
+%         for k = fc_ratio:-1:1
+%             if ((i-1)*fc_ratio)*l + fc_ratio*(j-1) + k < length(T)+1
+%                 R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + k) = R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + k) + R2((i-1)*l2 + (j-1) + 1) - R((i-1)*fc_ratio*l + fc_ratio*(j-1) + 1);
+%             end
+%         end
+        R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 1) = R2((i-1)*l2 + (j-1) + 1);
     end
 end
 
