@@ -37,9 +37,11 @@ for i = 1:N2
         R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 1) = R2((i-1)*l2 + (j-1) + 1);
     end
 %% Update by interpolation
-    for j = 1:l2 - 1
-        R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 2) = (R2((i-1)*l2 + (j-1) + 1) + R2((i-1)*l2 + j + 1))/2;
-    end
+%     if level ~= 1
+%         for j = 1:l2 - 1
+%             R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 2) = (R2((i-1)*l2 + (j-1) + 1) + R2((i-1)*l2 + j + 1))/2;
+%         end
+%     end
 end
 
 S = R;
