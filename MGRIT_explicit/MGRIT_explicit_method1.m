@@ -15,6 +15,7 @@ R = T;
 for i = 1:N-1
     R(i*l + 1:(i+1)*l) = Lax_Wendroff(T((i-1)*l + 1:i*l), h, dt);
 end
+T = R;
 
 N2 = ceil(N / fc_ratio);
 l2 = ceil(l / fc_ratio);
@@ -34,12 +35,19 @@ for i = 1:N2
 %             end
 %         end
 %% Update only on coarse
+%         R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 1) = R2((i-1)*l2 + (j-1) + 1);
+%% Update the average of front and back update
         R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 1) = R2((i-1)*l2 + (j-1) + 1);
     end
-%% Update by interpolation
-    for j = 1:l2 - 1
-        R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 2) = (R2((i-1)*l2 + (j-1) + 1) + R2((i-1)*l2 + j + 1))/2;
+    for j = 1:l2-1
+            front = R2((i-1)*l2 + (j-1) + 1) - T((i-1)*fc_ratio*l + fc_ratio*(j-1) + 1);
+%             back = R2((i-1)*l2 + (j-1) + 2) - T((i-1)*fc_ratio*l + fc_ratio*(j) + 1);
+            R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 2) = R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 2) + front;
     end
+%% Update by interpolation
+%     for j = 1:l2 - 1
+%         R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 2) = (R2((i-1)*l2 + (j-1) + 1) + R2((i-1)*l2 + j + 1))/2;
+%     end
 end
 
 S = R;

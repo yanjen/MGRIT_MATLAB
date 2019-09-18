@@ -4,7 +4,7 @@ h = 1.25;
 dt = 1;
 x = 0:h:1000;
 l = length(x);
-N = 600;
+N = 601;
 Y = zeros(1, l);
 for i = 1:length(x)
     if x(i) > 49 && x(i) < 111
@@ -14,7 +14,7 @@ end
 Y = repmat(Y,1,N);
 fc_ratio = 2;
 level = 2;
-iter = 150;
+iter = 155;
 
 f = figure;
 % subplot(2,1,1)
@@ -48,6 +48,7 @@ for i = 1:iter
 %     plot(linspace(0, N, l*N), Y);
     pause(0.05)
 end
+plot(x, Y(l*(N-1) + 1:l*N), 'LineWidth', 2);
 
 %% Plot explicit time marching result
 % Y_ETM = zeros(1, l);
