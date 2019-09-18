@@ -1,10 +1,12 @@
 function MGRIT_explicit_driver()
+%% Initialization
 option = 'NoCoarseDirect';
 h = 1.25;
 dt = 1;
-x = 0:h:1000;
+Max = 1000;
+x = 0:h:Max;
 l = length(x);
-N = 601;
+N = 600;
 Y = zeros(1, l);
 for i = 1:length(x)
     if x(i) > 49 && x(i) < 111
@@ -12,9 +14,20 @@ for i = 1:length(x)
     end
 end
 Y = repmat(Y,1,N);
-fc_ratio = 2;
+fc_ratio = 4;
 level = 2;
-iter = 155;
+iter = 43;
+
+%% Initial different y values ====
+% ratio = fc_ratio^(level - 1);
+% for i = 2:N
+%     if mod(i,fc_ratio) == 0
+%         Y((i-1)*l + 1:i*l) = Lax_Wendroff(Y((i-2)*l + 1:(i-1)*l), h*ratio, dt*ratio);
+%     else
+%         Y((i-1)*l + 1:i*l) = Y((i-2)*l + 1:(i-1)*l);
+%     end
+% end
+%=================================
 
 f = figure;
 % subplot(2,1,1)
@@ -84,7 +97,7 @@ pause(0.5)
 ratio = fc_ratio^(level - 1);
 h = h * ratio;
 dt = dt * ratio;
-x = 0:h:300;
+x = 0:h:Max;
 Y_2 = zeros(size(x));
 for i = 1:length(x)
     if x(i) > 49 && x(i) < 111
@@ -97,6 +110,7 @@ end
 Y_2 = Lax_Wendroff(Y_2, h, dt/ratio);
 Y_2 = Lax_Wendroff(Y_2, h, dt/ratio);
 Y_2 = Lax_Wendroff(Y_2, h, dt/ratio);
+% subplot(2,1,1)
 p_2 = plot(x, Y_2, '-x'); M3 = 'Explicit with coarsest grids';
 legend([p_ETM; p_2], M1, M3);
 

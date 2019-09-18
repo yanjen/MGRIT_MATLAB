@@ -40,9 +40,11 @@ for i = 1:N2
         R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 1) = R2((i-1)*l2 + (j-1) + 1);
     end
     for j = 1:l2-1
-            front = R2((i-1)*l2 + (j-1) + 1) - T((i-1)*fc_ratio*l + fc_ratio*(j-1) + 1);
-%             back = R2((i-1)*l2 + (j-1) + 2) - T((i-1)*fc_ratio*l + fc_ratio*(j) + 1);
-            R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 2) = R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 2) + front;
+            front = R2((i-1)*l2 + (j-1) + 1) - T((i-1)*fc_ratio*l + fc_ratio*(j-1) + 1); 
+            back = R2((i-1)*l2 + (j-1) + 2) - T((i-1)*fc_ratio*l + fc_ratio*(j) + 1);
+            for k = 1:fc_ratio - 1
+                R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 1 + k) = R(((i-1)*fc_ratio)*l + fc_ratio*(j-1) + 1 + k) + (front * (fc_ratio - k) + back * k)/fc_ratio;
+            end
     end
 %% Update by interpolation
 %     for j = 1:l2 - 1
@@ -52,8 +54,8 @@ end
 
 S = R;
 for i = 1:N-1
-    if mod(i,2) == 1
-        S(i*l + 1:(i+1)*l) = Lax_Wendroff(R((i-1)*l + 1:i*l), h, dt);
+    if mod(i,fc_ratio) ~= 0
+        S(i*l + 1:(i+1)*l) = Lax_Wendroff(S((i-1)*l + 1:i*l), h, dt);
     end
 end
 
