@@ -14,9 +14,9 @@ for i = 1:length(x)
     end
 end
 Y = repmat(Y,1,N);
-fc_ratio = 4;
-level = 2;
-iter = 43;
+fc_ratio = 2;
+level = 3;
+iter = 80;
 
 %% Initial different y values ====
 % ratio = fc_ratio^(level - 1);
