@@ -13,6 +13,9 @@ npn = ceil(n / num_processors);
 Z = Y;
 last_proc_values = zeros(1,l);
 for proc = 1:num_processors
+    if (proc - 1) * npn + 1 > n
+        break
+    end
     for i = (proc - 1) * npn + 1 : min(proc * npn, n)
         last_time_step = (i - 1) * ratio + 1;
         if i == (proc - 1) * npn + 1
