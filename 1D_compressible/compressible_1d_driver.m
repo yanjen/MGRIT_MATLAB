@@ -1,8 +1,9 @@
 function compressible_1d_driver()
 %% Parameters
-N = 32;
+N = 65;
 dt = 0.01;
 x = linspace(1,15,N);
+dx = x(2) - x(1);
 density = 1;
 x_velocity = 0.1;
 gamma = 1.4;
@@ -13,36 +14,41 @@ max_iter = 600;
 rho = density * ones(1,N);
 rhou = [0, x_velocity * density * ones(1,N-1)];
 E = P ./ (gamma - 1) .* ones(1,N) + 0.5 .* rhou .* rhou ./ rho;
+u = rhou ./ rho;
 
 %% Plotting
 subplot(3,1,1)
 plot(x,rho)
+ylabel("Density")
 subplot(3,1,2)
-plot(x,rhou)
+plot(x,u)
+ylabel("Velocity")
 subplot(3,1,3)
 plot(x,E)
+ylabel("Energy")
 
 %% Time marching
 for iter = 1:max_iter
-    u = rhou ./ rho;
-    F1 = rhou;
-    F2 = rhou .* u + P;
-    F3 = (E + P) .* u;
-    P = (E - 0.5 .* rho .* u .* u) .* (gamma - 1);
+    [rho, rhou, E, P] = Lax_Wendroff_vecv(rho, rhou, E, P, gamma, dt);
     
-    rho = Lax_Wendroff_vecv(rho, F1, dt, 2);
-    rhou = Lax_Wendroff_vecv(rhou, F2, dt, 0);
-    E = Lax_Wendroff_vecv(E, F3, dt, 2);
+    [rho, rhou, E] = extrapolate_boundary(rho, rhou, E);
+    
+    [rhou, E] = viscosity_fix(rho, rhou, E, P, gamma, dx, dt);
+    
+    u = rhou ./ rho;
     
     %% Plotting
     subplot(3,1,1)
     plot(x,rho)
+    ylabel("Density")
     subplot(3,1,2)
-    plot(x,rhou)
+    plot(x,u)
+    ylabel("Velocity")
     subplot(3,1,3)
     plot(x,E)
+    ylabel("Energy")
     
-    pause(0.05)
+    pause(0.01)
 end
 
 end
