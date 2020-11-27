@@ -15,7 +15,7 @@ end
 fc_ratio = 2;
 level = 3;
 num_processors = 8;
-tol = 0.2;
+tol = 0.3;
 Y = repmat(Y,1,num_processors + 1);
 
 figure;
@@ -58,6 +58,7 @@ for i = 1:length(x)
         A(i) = 100*sin(pi*(x(i)-50-N)/60);
     end
 end
+subplot(2,1,1)
 plot(x, A, "LineWidth", 2);
 hold on
 
@@ -76,8 +77,17 @@ plot(x, B, "LineWidth", 2);
 % Plot explicit PinST result
 plot(x, Z(:, num_processors + 1), "LineWidth", 2);
 
-title(strcat("PinST result (tol = ", num2str(tol), ")"), "FontSize", 20);
-legend("exact", "Lax-Wendroff", "explicit PinST", "Location", "northwest", "FontSize", 15);
+title(strcat("Result Comparison (tol = ", num2str(tol), ")"), "FontSize", 20);
+legend("Theoretical", "Lax-Wendroff", "Multilevel Parareal", "Location", "northwest", "FontSize", 15);
+
+%% Plot error comparison
+subplot(2,1,2)
+plot(x, abs(A-A), "LineWidth", 2);
+hold on;
+plot(x, abs(A-B), "LineWidth", 2);
+plot(x, abs(A-Z(:, num_processors + 1)'), "LineWidth", 2);
+title("Error Comparison", "FontSize", 20);
+legend("Theoretical", "Lax-Wendroff", "Multilevel Parareal", "Location", "northwest", "FontSize", 15);
 
 %% Output last result
 Output = Z(:,num_processors + 1)';

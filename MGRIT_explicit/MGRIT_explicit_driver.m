@@ -3,10 +3,10 @@ function MGRIT_explicit_driver()
 option = 'NoCoarseDirect';
 h = 1.25;
 dt = 1;
-Max = 1000;
+Max = 300;
 x = 0:h:Max;
 l = length(x);
-N = 600;
+N = 150;
 Y = zeros(1, l);
 for i = 1:length(x)
     if x(i) > 49 && x(i) < 111
