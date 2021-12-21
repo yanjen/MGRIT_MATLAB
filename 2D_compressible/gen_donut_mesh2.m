@@ -22,4 +22,7 @@ for i = 1:num_r
     end
 end
 
+x = [x;x(1,:)];
+y = [y;y(1,:)];
+
 end
